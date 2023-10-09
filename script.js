@@ -11,10 +11,26 @@ function updateScoreDiv() {
     return playerScore + " : " + computerScore;
 }
 
+function announceWinner(){
+    if (playerScore === 5) {
+        return "Congratulations! You won the game!";
+    } else if (computerScore === 5) {
+        return "Sorry, the computer won the game.";
+    }
+}
+
+function resetGame() {
+    playerScore = 0;
+    computerScore = 0;
+    roundsPlayed = 0;
+    updateScoreDiv();
+    document.querySelector('.resultDiv').textContent = "Please choose"
+    document.querySelector('.scoreDiv').textContent = "";
+}
+
 function playRound(playerSelection, computerSelection){
     playerSelection = playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1).toLowerCase();
 
-    let resultMessage = '';
      if (playerSelection === "Rock" && computerSelection === "Paper"){
         computerScore += 1;
         return "You Lose!" + computerSelection + " beats " + playerSelection;
@@ -40,8 +56,27 @@ function playRound(playerSelection, computerSelection){
 
 }
 
+function endGame(){
+    if (playerScore === 5 || computerScore === 5){
+        const winner = announceWinner();
+        document.querySelector('.resultDiv').textContent = winner;
+        var againMenu = document.createElement('div');
+        var yesButton = document.createElement('button');
+        againMenu.textContent = 'Do you want to play again?'
+        yesButton.textContent = 'Yes';
+        againMenu.appendChild(yesButton);
+        document.body.appendChild(againMenu);
+        yesButton.addEventListener('click', function() {
+            resetGame();
+            document.body.removeChild(againMenu);
+        });
+       
+    }
+}
+
 
 window.onload = function() {
+    
     var rockButton = document.createElement('button');
     rockButton.textContent = 'Rock';
     rockButton.addEventListener('click', function() {
@@ -49,6 +84,8 @@ window.onload = function() {
         document.querySelector('.resultDiv').textContent = result;
         const score = updateScoreDiv();
         document.querySelector('.scoreDiv').textContent = score;
+         
+        endGame();
     });
 
     var paperButton = document.createElement('button');
@@ -58,6 +95,8 @@ window.onload = function() {
         document.querySelector('.resultDiv').textContent = result;
         const score = updateScoreDiv();
         document.querySelector('.scoreDiv').textContent = score;
+
+        endGame();
     });
 
     var scissorsButton = document.createElement('button');
@@ -67,10 +106,13 @@ window.onload = function() {
         document.querySelector('.resultDiv').textContent = result;
         const score = updateScoreDiv();
         document.querySelector('.scoreDiv').textContent = score;
+
+        endGame();
     });
 
     var resultDiv = document.createElement('div');
-    resultDiv.className = 'resultDiv'
+    resultDiv.className = 'resultDiv';
+    resultDiv.textContent = "Please choose";
 
     var scoreDiv = document.createElement('div');
     scoreDiv.className = 'scoreDiv';
@@ -84,15 +126,4 @@ window.onload = function() {
     document.body.appendChild(resultDiv);
     document.body.appendChild(scoreDiv);
 
-
 }
-
-// function game(){
-//     for (let i = 0; i < 5; i++){
-//        let playerSelection = prompt("Select rock paper or scissor");
-//        const computerSelection = getComputerChoice();
-//        console.log(playRound(playerSelection, computerSelection));
-//     }
-// }
-
-// game();
